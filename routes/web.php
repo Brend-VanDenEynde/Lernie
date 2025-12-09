@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\NewsPostController;
+use App\Http\Controllers\FaqController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,5 +20,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/nieuws', [NewsPostController::class, 'index'])->name('news.index');
+
+Route::get('/faq', [FaqController::class, 'index'])->name('faq.index');
 
 require __DIR__.'/auth.php';

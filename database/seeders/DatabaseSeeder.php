@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Subject;
 use App\Models\NewsPost;
+use App\Models\FaqCategory;
+use App\Models\FaqQuestion;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -35,7 +37,7 @@ class DatabaseSeeder extends Seeder
         $tutorBrendan = User::factory()->create([
             'name' => 'Brendan Tutor',
             'email' => 'tutor@lernie.test',
-            'password' => bcrypt('password'),
+            'password' => bcrypt('password'), // Wachtwoord is 'password'
             'role' => 'tutor',
             'city' => 'Brussel',
             'about_me' => 'Ik geef al 5 jaar les in exacte wetenschappen.',
@@ -62,7 +64,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Brend Van Den Eynde',
             'email' => 'brend@lernie.test',
-            'password' => bcrypt('password'),
+            'password' => bcrypt('password'), // Wachtwoord is 'password'
             'role' => 'student',
         ]);
 
@@ -78,6 +80,15 @@ class DatabaseSeeder extends Seeder
             'title' => 'Examenperiode komt eraan',
             'content' => 'Heb jij al een tutor gevonden voor de examens? Wacht niet te lang!',
             'published_at' => now()->subDays(2), // 2 dagen geleden
+        ]);
+
+        // FAQ-categorieën en vragen aanmaken
+        $catAlgemeen = FaqCategory::create(['name' => 'Algemeen']);
+
+        FaqQuestion::create([
+            'faq_category_id' => $catAlgemeen->id,
+            'question' => 'Hoe werkt Lernie?',
+            'answer' => 'Je zoekt een tutor, boekt een les en betaalt veilig via ons platform.'
         ]);
     }
 }
