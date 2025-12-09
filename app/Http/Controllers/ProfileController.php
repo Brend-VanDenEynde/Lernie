@@ -26,20 +26,29 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $data = $request->validated();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user = $request->user();
+
+        // Avatar upload
+        if ($request->hasFile('avatar')) {
+            $path = $request->file('avatar')->store('avatars', 'public');
+
+            // Eventueel oude avatar verwijderen hier
+            $data['avatar'] = $path;
         }
 
-        $request->user()->save();
+        $user->fill($data);
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        // Reset email verificatie indien email gewijzigd
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
+
+        return redirect()->route('profile.edit')->with('status', 'profile-updated');
     }
-
-    /**
-     * Delete the user's account.
-     */
     public function destroy(Request $request): RedirectResponse
     {
         $request->validateWithBag('userDeletion', [

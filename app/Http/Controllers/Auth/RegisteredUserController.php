@@ -27,24 +27,46 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+   public function store(Request $request): RedirectResponse
+{
+    $request->validate([
+        'name' => ['required', 'string', 'max:255'],
+        'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+        'password' => ['required', 'confirmed', Rules\Password::defaults()],
 
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        'role' => ['required', 'string', 'in:student,tutor'], 
+        'city' => ['required', 'string', 'max:255'],
+        'birthday' => ['nullable', 'date'],
 
-        event(new Registered($user));
+        // Bio verplicht voor leraren, optioneel voor studenten
+        'about_me' => [
+            $request->role === 'tutor' ? 'required' : 'nullable',
+            'string'
+        ],
+    ]);
 
-        Auth::login($user);
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
 
-        return redirect(route('dashboard', absolute: false));
+        'role' => $request->role,
+        'city' => $request->city,
+        'birthday' => $request->birthday,
+        'about_me' => $request->about_me,
+    ]);
+
+    event(new Registered($user));
+
+    Auth::login($user);
+
+    // Als tutor → doorsturen naar profiel om vakken + avatar toe te voegen
+    if ($user->role === 'tutor') {
+        return redirect()->route('profile.edit');
     }
+
+    // Studenten gaan gewoon naar dashboard
+    return redirect()->route('dashboard');
+}
+
 }

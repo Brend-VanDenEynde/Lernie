@@ -8,23 +8,41 @@ use Illuminate\Validation\Rule;
 
 class ProfileUpdateRequest extends FormRequest
 {
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+
             'email' => [
                 'required',
                 'string',
-                'lowercase',
                 'email',
                 'max:255',
                 Rule::unique(User::class)->ignore($this->user()->id),
             ],
+
+            'city' => ['required', 'string', 'max:255'],
+            'birthday' => ['nullable', 'date'],
+
+            'about_me' => [
+                $this->user()->role === 'tutor' ? 'required' : 'nullable',
+                'string',
+                'max:1000'
+            ],
+
+            'avatar' => ['nullable', 'image', 'max:2048'], // 2MB max
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation()
+    {
+        if ($this->has('email')) {
+            $this->merge([
+                'email' => strtolower($this->email),
+            ]);
+        }
     }
 }
