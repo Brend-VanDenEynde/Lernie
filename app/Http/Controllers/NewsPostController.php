@@ -9,6 +9,8 @@ class NewsPostController extends Controller
 {
     public function index()
     {
-        return view('news.index');
+        $newsPosts = NewsPost::latest()->get(); 
+        
+        return view('news.index', compact('newsPosts'));
     }
 }

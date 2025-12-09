@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Subject;
+use App\Models\NewsPost;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -63,6 +64,20 @@ class DatabaseSeeder extends Seeder
             'email' => 'brend@lernie.test',
             'password' => bcrypt('password'),
             'role' => 'student',
+        ]);
+
+
+        // Nieuwsberichten aanmaken
+        NewsPost::create([
+            'title' => 'Welkom bij Lernie!',
+            'content' => 'Wij zijn live! Studenten kunnen zich vanaf nu inschrijven.',
+            'published_at' => now(),
+        ]);
+
+        NewsPost::create([
+            'title' => 'Examenperiode komt eraan',
+            'content' => 'Heb jij al een tutor gevonden voor de examens? Wacht niet te lang!',
+            'published_at' => now()->subDays(2), // 2 dagen geleden
         ]);
     }
 }
