@@ -2,9 +2,36 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Lesson extends Model
 {
-    //
+    use HasFactory;
+
+    protected $fillable = [
+        'tutor_id',
+        'subject_id',
+        'start_time',
+        'duration_minutes',
+        'location',
+        'price',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'start_time' => 'datetime',
+    ];
+
+    // Les hoort bij Tutor 
+    public function tutor()
+    {
+        return $this->belongsTo(User::class, 'tutor_id');
+    }
+
+    // Les gaat over een Vak 
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class);
+    }
 }
