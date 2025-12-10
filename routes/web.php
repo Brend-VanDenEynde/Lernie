@@ -23,4 +23,8 @@ Route::get('/nieuws', [NewsPostController::class, 'index'])->name('news.index');
 
 Route::get('/faq', [FaqController::class, 'index'])->name('faq.index');
 
+Route::get('/attributen', function () {
+    return view('attributen');
+});
+
 require __DIR__.'/auth.php';
