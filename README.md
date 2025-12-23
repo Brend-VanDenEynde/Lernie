@@ -85,14 +85,15 @@ De applicatie is nu beschikbaar op `http://localhost:8000`
 
 ## Bronnen
 
-- [Laravel Documentatie](https://laravel.com/docs)
-- [Tailwind CSS Documentatie](https://tailwindcss.com/docs)
-- [Vite Documentatie](https://vitejs.dev/)
-- [Vue.js Documentatie](https://vuejs.org/)
+-   [Laravel Documentatie](https://laravel.com/docs)
+-   [Tailwind CSS Documentatie](https://tailwindcss.com/docs)
+-   [Vite Documentatie](https://vitejs.dev/)
+-   [Vue.js Documentatie](https://vuejs.org/)
 
 ### AI Hulpmiddelen
 
 Dit project maakt gebruik van AI-hulpmiddelen voor:
-- **Styling:** AI-assistentie voor het ontwerp en implementatie van UI-componenten
-- **README:** Design en inhoud van deze README via AI-gegenereerde suggesties
-- **Code Completion:** GitHub Copilot voor code aanvullingen en snellere development
+
+-   **Styling:** AI-assistentie voor het ontwerp en implementatie van UI-componenten
+-   **README:** Design en inhoud van deze README via AI-gegenereerde suggesties
+-   **Code Completion:** GitHub Copilot voor code aanvullingen en snellere development
