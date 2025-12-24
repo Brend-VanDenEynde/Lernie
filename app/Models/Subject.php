@@ -16,4 +16,10 @@ class Subject extends Model
     {
         return $this->belongsToMany(User::class);
     }
+
+    // Welke studenten volgen dit vak
+    public function students()
+    {
+        return $this->belongsToMany(User::class)->where('role', 'student');
+    }
 }
