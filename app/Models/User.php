@@ -56,4 +56,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Subject::class);
     }
+
+    // Lessen waar de student voor is ingeschreven
+    public function enrolledLessons()
+    {
+        return $this->belongsToMany(Lesson::class)->withTimestamps();
+    }
 }

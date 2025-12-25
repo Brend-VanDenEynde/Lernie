@@ -23,6 +23,22 @@ class LessonController extends Controller
     }
 
     /**
+     * Display the specified lesson with enrollment details
+     */
+    public function show(Lesson $lesson)
+    {
+        // Ensure the lesson belongs to the authenticated tutor
+        if ($lesson->tutor_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Load relationships
+        $lesson->load(['subject', 'enrolledStudents']);
+
+        return view('lessons.show', compact('lesson'));
+    }
+
+    /**
      * Toon het formulier voor het aanmaken van een nieuwe les
      */
     public function create()

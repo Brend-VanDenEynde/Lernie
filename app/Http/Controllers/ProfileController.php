@@ -49,6 +49,28 @@ class ProfileController extends Controller
 
         return redirect()->route('profile.edit')->with('status', 'profile-updated');
     }
+
+    /**
+     * Update the user's subjects.
+     */
+    public function updateSubjects(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+        
+        // Validate input
+        $request->validate([
+            'subject_ids' => 'array',
+            'subject_ids.*' => 'exists:subjects,id',
+        ]);
+
+        $subjectIds = $request->input('subject_ids', []);
+        
+        // Sync subjects (automatically adds new ones and removes unselected ones)
+        $user->subjects()->sync($subjectIds);
+
+        return redirect()->route('profile.edit')->with('status', 'subjects-updated');
+    }
+
     public function destroy(Request $request): RedirectResponse
     {
         $request->validateWithBag('userDeletion', [

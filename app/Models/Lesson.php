@@ -35,4 +35,10 @@ class Lesson extends Model
     {
         return $this->belongsTo(Subject::class);
     }
+
+    // Studenten die ingeschreven zijn voor deze les
+    public function enrolledStudents()
+    {
+        return $this->belongsToMany(User::class)->withTimestamps();
+    }
 }
