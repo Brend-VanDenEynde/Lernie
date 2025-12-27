@@ -26,7 +26,7 @@
                                     <p class="text-green-100">Les ID: #{{ $lesson->id }}</p>
                                 </div>
                                 <span class="inline-block px-4 py-2 rounded-full text-sm font-semibold {{ $lesson->is_active ? 'bg-white text-green-600' : 'bg-gray-200 text-gray-800' }}">
-                                    {{ $lesson->is_active ? '✓ Actief' : 'Inactief' }}
+                                    {{ $lesson->is_active ? 'Actief' : 'Inactief' }}
                                 </span>
                             </div>
                         </div>

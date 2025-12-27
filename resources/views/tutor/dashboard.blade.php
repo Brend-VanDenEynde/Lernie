@@ -87,7 +87,7 @@
                                                 @endphp
                                                 @if($enrolledCount > 0)
                                                     <span class="inline-block px-2 py-1 rounded text-xs font-semibold bg-blue-100 text-blue-700">
-                                                        👥 {{ $enrolledCount }} ingeschreven
+                                                        {{ $enrolledCount }} ingeschreven
                                                     </span>
                                                 @endif
                                             </div>
@@ -188,7 +188,7 @@
                                         </form>
                                     </div>
                                     <p class="text-sm text-gray-600 font-medium">
-                                        👥 {{ $subject->students->count() }} student{{ $subject->students->count() != 1 ? 'en' : '' }} ingeschreven
+                                         {{ $subject->students->count() }} student{{ $subject->students->count() != 1 ? 'en' : '' }} ingeschreven
                                     </p>
                                 </div>
                             @endforeach

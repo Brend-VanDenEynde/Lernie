@@ -19,50 +19,73 @@
             @endif
 
             @if($lessons->count() > 0)
-                <div class="grid grid-cols-1 gap-6">
+                <div class="space-y-4">
                     @foreach($lessons as $lesson)
-                        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6 border-l-4 border-blue-500">
-                            <div class="flex justify-between items-start">
-                                <div class="flex-1">
-                                    <h3 class="text-2xl font-bold text-gray-800">{{ $lesson->subject->name }}</h3>
-                                    
-                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-                                        <div>
-                                            <p class="text-sm text-gray-600">Datum & Tijd</p>
-                                            <p class="text-gray-900 font-semibold">{{ $lesson->start_time->format('d-m-Y H:i') }}</p>
+                        <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border-l-4 {{ $lesson->is_active ? 'border-green-500' : 'border-gray-400' }}">
+                            <div class="p-6">
+                                <div class="flex justify-between items-start gap-4">
+                                    <!-- Hoofdinformatie -->
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center gap-3 mb-3">
+                                            <h3 class="text-xl font-bold text-gray-900">{{ $lesson->subject->name }}</h3>
+                                            <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold {{ $lesson->is_active ? 'bg-green-100 text-green-700' : 'bg-gray-300 text-gray-700' }}">
+                                                {{ $lesson->is_active ? 'ACTIEF' : 'INACTIEF' }}
+                                            </span>
+                                            @php
+                                                $enrolledCount = $lesson->enrolledStudents()->count();
+                                            @endphp
+                                            @if($enrolledCount > 0)
+                                                <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">
+                                                    {{ $enrolledCount }} ingeschreven
+                                                </span>
+                                            @endif
                                         </div>
-                                        <div>
-                                            <p class="text-sm text-gray-600">Duur</p>
-                                            <p class="text-gray-900 font-semibold">{{ $lesson->duration_minutes }} minuten</p>
+                                        
+                                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
+                                            <div>
+                                                <p class="text-xs text-gray-500 font-medium mb-1">Datum</p>
+                                                <p class="text-sm text-gray-900 font-semibold">{{ $lesson->start_time->format('d-m-Y') }}</p>
+                                                <p class="text-sm text-gray-700">{{ $lesson->start_time->format('H:i') }} uur</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-xs text-gray-500 font-medium mb-1">Duur</p>
+                                                <p class="text-sm text-gray-900 font-semibold">{{ $lesson->duration_minutes }} minuten</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-xs text-gray-500 font-medium mb-1">Locatie</p>
+                                                <p class="text-sm text-gray-900 font-semibold truncate" title="{{ $lesson->location }}">{{ $lesson->location }}</p>
+                                            </div>
+                                            <div>
+                                                <p class="text-xs text-gray-500 font-medium mb-1">Prijs</p>
+                                                <p class="text-lg text-green-600 font-bold">€ {{ number_format($lesson->price, 2, ',', '.') }}</p>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <p class="text-sm text-gray-600">Locatie</p>
-                                            <p class="text-gray-900 font-semibold">{{ $lesson->location }}</p>
-                                        </div>
-                                        <div>
-                                            <p class="text-sm text-gray-600">Prijs</p>
-                                            <p class="text-gray-900 font-semibold">€ {{ number_format($lesson->price, 2, ',', '.') }}</p>
-                                        </div>
+
+                                        @if($lesson->description)
+                                            <div class="mt-3 p-3 bg-gray-50 rounded border-l-2 border-gray-300">
+                                                <p class="text-sm text-gray-700">
+                                                    <strong>Beschrijving:</strong> {{ Str::limit($lesson->description, 150) }}
+                                                </p>
+                                            </div>
+                                        @endif
                                     </div>
 
-                                    <div class="mt-4">
-                                        <span class="inline-block px-3 py-1 rounded-full text-sm font-medium {{ $lesson->is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                                            {{ $lesson->is_active ? 'Actief' : 'Inactief' }}
-                                        </span>
+                                    <!-- Acties -->
+                                    <div class="flex flex-col gap-2 flex-shrink-0">
+                                        <a href="{{ route('lessons.show', $lesson) }}" class="px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition font-medium shadow-sm text-center text-sm whitespace-nowrap">
+                                            Meer info
+                                        </a>
+                                        <a href="{{ route('lessons.edit', $lesson) }}" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition font-medium shadow-sm text-center text-sm">
+                                            Bewerk
+                                        </a>
+                                        <form action="{{ route('lessons.destroy', $lesson) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je deze les wilt verwijderen?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="w-full px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition font-medium shadow-sm text-sm">
+                                                Verwijder
+                                            </button>
+                                        </form>
                                     </div>
-                                </div>
-
-                                <div class="flex gap-2">
-                                    <a href="{{ route('lessons.edit', $lesson) }}" class="px-3 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition">
-                                        Bewerk
-                                    </a>
-                                    <form action="{{ route('lessons.destroy', $lesson) }}" method="POST" onsubmit="return confirm('Weet je zeker dat je deze les wilt verwijderen?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition">
-                                            Verwijder
-                                        </button>
-                                    </form>
                                 </div>
                             </div>
                         </div>

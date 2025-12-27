@@ -5,6 +5,7 @@ use App\Http\Controllers\NewsPostController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LessonController;
+use App\Http\Controllers\StudentController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,15 +27,26 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile/subjects', [ProfileController::class, 'updateSubjects'])->name('profile.subjects.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Les management voor tutors
     Route::get('/lessen', [LessonController::class, 'index'])->name('lessons.index');
     Route::get('/lessen/create', [LessonController::class, 'create'])->name('lessons.create');
     Route::post('/lessen', [LessonController::class, 'store'])->name('lessons.store');
+    Route::get('/lessen/{lesson}', [LessonController::class, 'show'])->name('lessons.show');
     Route::get('/lessen/{lesson}/edit', [LessonController::class, 'edit'])->name('lessons.edit');
     Route::put('/lessen/{lesson}', [LessonController::class, 'update'])->name('lessons.update');
     Route::delete('/lessen/{lesson}', [LessonController::class, 'destroy'])->name('lessons.destroy');
+});
+
+// Student routes
+Route::middleware(['auth', 'verified'])->prefix('student')->name('student.')->group(function () {
+    Route::get('/lessen', [StudentController::class, 'lessons'])->name('lessons.index');
+    Route::get('/lessen/{lesson}', [StudentController::class, 'showLesson'])->name('lessons.show');
+    Route::post('/lessen/{lesson}/enroll', [StudentController::class, 'enroll'])->name('lessons.enroll');
+    Route::delete('/lessen/{lesson}/enroll', [StudentController::class, 'unenroll'])->name('lessons.unenroll');
+    Route::get('/inschrijvingen', [StudentController::class, 'myEnrollments'])->name('enrollments.index');
 });
 
 Route::get('/nieuws', [NewsPostController::class, 'index'])->name('news.index');
