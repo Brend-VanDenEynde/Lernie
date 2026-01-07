@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -11,6 +12,17 @@ use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+    /**
+     * Display a user's public profile.
+     */
+    public function show(User $user): View
+    {
+        // Load relationships
+        $user->load('subjects', 'lessons');
+        
+        return view('profile.show', compact('user'));
+    }
+
     /**
      * Display the user's profile form.
      */
