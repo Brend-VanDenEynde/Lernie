@@ -26,6 +26,62 @@ class AdminController extends Controller
         return view('admin.users.show', compact('user'));
     }
 
+    public function promoteToAdmin(User $user)
+    {
+        if ($user->role === 'admin') {
+            return back()->with('error', 'Gebruiker is al een admin.');
+        }
+
+        $user->update(['role' => 'admin']);
+        return back()->with('success', 'Gebruiker is nu admin.');
+    }
+
+    public function demoteFromAdmin(User $user)
+    {
+        if ($user->role !== 'admin') {
+            return back()->with('error', 'Gebruiker is geen admin.');
+        }
+
+        // Prevent demoting yourself
+        if ($user->id === auth()->id()) {
+            return back()->with('error', 'Je kunt jezelf niet degraderen.');
+        }
+
+        $user->update(['role' => 'student']);
+        return back()->with('success', 'Admin rechten ingetrokken. Gebruiker is nu een student.');
+    }
+
+    public function createUser()
+    {
+        return view('admin.users.create');
+    }
+
+    public function storeUser(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|min:8|confirmed',
+            'role' => 'required|in:student,tutor,admin',
+        ]);
+
+        $validated['password'] = bcrypt($validated['password']);
+        User::create($validated);
+
+        return redirect()->route('admin.users.index')->with('success', 'Gebruiker succesvol aangemaakt.');
+    }
+
+    public function deleteUser(User $user)
+    {
+        // Prevent deleting yourself
+        if ($user->id === auth()->id()) {
+            return back()->with('error', 'Je kunt jezelf niet verwijderen.');
+        }
+
+        $user->delete();
+        return redirect()->route('admin.users.index')->with('success', 'Gebruiker verwijderd.');
+    }
+
     public function articles()
     {
         $articles = NewsPost::latest()->get();

@@ -13,6 +13,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Public profile - toegankelijk voor iedereen
+Route::get('/profiel/{user}', [ProfileController::class, 'show'])->name('profile.show');
+
 Route::get('/dashboard', function () {
     $user = Auth::user();
     if ($user && $user->role === 'admin') {
@@ -94,7 +97,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     
     // Users
     Route::get('/users', [AdminController::class, 'users'])->name('users.index');
+    Route::get('/users/create', [AdminController::class, 'createUser'])->name('users.create');
+    Route::post('/users', [AdminController::class, 'storeUser'])->name('users.store');
     Route::get('/users/{user}', [AdminController::class, 'showUser'])->name('users.show');
+    Route::post('/users/{user}/promote', [AdminController::class, 'promoteToAdmin'])->name('users.promote');
+    Route::post('/users/{user}/demote', [AdminController::class, 'demoteFromAdmin'])->name('users.demote');
+    Route::delete('/users/{user}', [AdminController::class, 'deleteUser'])->name('users.destroy');
 
     // Articles (News)
     Route::get('/articles', [AdminController::class, 'articles'])->name('articles.index');
