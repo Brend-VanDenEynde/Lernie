@@ -6,6 +6,7 @@ use App\Http\Controllers\FaqController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LessonController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\ContactController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -56,6 +57,10 @@ Route::get('/nieuws', [NewsPostController::class, 'index'])->name('news.index');
 Route::get('/nieuws/{newsPost}', [NewsPostController::class, 'show'])->name('news.show');
 
 Route::get('/faq', [FaqController::class, 'index'])->name('faq.index');
+
+// Contact routes - accessible to everyone
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 Route::get('/attributen', function () {
     return view('attributen');
@@ -124,6 +129,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/faq/{faq}/edit', [AdminController::class, 'editFaq'])->name('faq.edit');
     Route::put('/faq/{faq}', [AdminController::class, 'updateFaq'])->name('faq.update');
     Route::delete('/faq/{faq}', [AdminController::class, 'destroyFaq'])->name('faq.destroy');
+
+    // Contacts
+    Route::get('/contacts', [AdminController::class, 'contacts'])->name('contacts.index');
+    Route::get('/contacts/{contact}', [AdminController::class, 'showContact'])->name('contacts.show');
+    Route::delete('/contacts/{contact}', [AdminController::class, 'destroyContact'])->name('contacts.destroy');
 });
 
 require __DIR__.'/auth.php';

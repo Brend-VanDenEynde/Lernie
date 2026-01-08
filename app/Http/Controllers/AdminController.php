@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\NewsPost;
 use App\Models\FaqQuestion;
 use App\Models\FaqCategory;
+use App\Models\Contact;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -210,5 +211,27 @@ class AdminController extends Controller
         FaqCategory::create($validated);
 
         return redirect()->route('admin.faq.categories.index')->with('success', 'Categorie succesvol aangemaakt.');
+    }
+
+    public function contacts()
+    {
+        $contacts = Contact::latest()->get();
+        return view('admin.contacts.index', compact('contacts'));
+    }
+
+    public function showContact(Contact $contact)
+    {
+        // Mark as read when admin views it
+        if (!$contact->is_read) {
+            $contact->update(['is_read' => true]);
+        }
+        
+        return view('admin.contacts.show', compact('contact'));
+    }
+
+    public function destroyContact(Contact $contact)
+    {
+        $contact->delete();
+        return redirect()->route('admin.contacts.index')->with('success', 'Contactbericht verwijderd.');
     }
 }

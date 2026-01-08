@@ -22,6 +22,9 @@
                     <x-nav-link :href="route('faq.index')" :active="request()->routeIs('faq.index')">
                         {{ __('FAQ') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('contact.index')" :active="request()->routeIs('contact.*')">
+                        {{ __('Contact') }}
+                    </x-nav-link>
 
                     @auth
                         @if(Auth::user()->role === 'admin')
@@ -101,6 +104,9 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('faq.index')" :active="request()->routeIs('faq.index')">
                 {{ __('FAQ') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('contact.index')" :active="request()->routeIs('contact.*')">
+                {{ __('Contact') }}
             </x-responsive-nav-link>
             
             @auth
