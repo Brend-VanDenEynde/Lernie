@@ -18,12 +18,13 @@ class AdminController extends Controller
 
     public function users()
     {
-        $users = User::all();
+        $users = User::with('subjects')->get();
         return view('admin.users.index', compact('users'));
     }
 
     public function showUser(User $user)
     {
+        $user->load('subjects');
         return view('admin.users.show', compact('user'));
     }
 
